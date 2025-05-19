@@ -1,414 +1,521 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bad Kids Bucket Hatifier</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --stride-pink: #e6007a;
-            --stride-pink-dark: #c5006a;
-            --stride-dark: #441529;
-            --stride-darker: #2b0a19;
-            --stride-light-bg: #fef1f7;
-            --light-text: #ffffff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            background: var(--stride-darker);
-            color: var(--light-text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem 1rem 4rem;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: white;
-        }
-        
-        .tagline {
-            font-size: 1.1rem;
-            opacity: 0.8;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        
-        .card {
-            background: var(--stride-dark);
-            border-radius: 12px;
-            padding: 2rem;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        #controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            width: fit-content;
-        }
-        
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        label {
-            font-weight: 600;
-        }
-        
-        input[type=number] {
-            width: 7rem;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            font-size: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            transition: all 0.2s;
-        }
-        
-        input[type=number]:focus {
-            outline: none;
-            border-color: var(--stride-pink);
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .btn {
-            cursor: pointer;
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary {
-            background: var(--stride-pink);
-            color: white;
-        }
-        
-        .btn-primary:hover:not(:disabled) {
-            background: var(--stride-pink-dark);
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .btn-secondary:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .canvas-container {
-            position: relative;
-            margin: 1rem 0;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        
-        canvas {
-            display: block;
-            background: #000;
-            image-rendering: pixelated;
-            max-width: 100%;
-            height: auto;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        footer {
-            margin-top: 3rem;
-            text-align: center;
-            font-size: 1rem;
-            opacity: 0.8;
-        }
-        
-        .heart {
-            color: var(--stride-pink);
-        }
-        
-        .emoji {
-            font-size: 1.4em;
-            vertical-align: middle;
-            margin-left: 5px;
-        }
-        
-        .loading {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 12px;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        
-        .loading.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--stride-pink);
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .card {
-                padding: 1.5rem 1rem;
-            }
-            
-            #controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .control-group {
-                justify-content: space-between;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bad Kids Bucket Hatifier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --stride-pink: #e6007a;
+      --stride-pink-dark: #c5006a;
+      --stride-dark: #441529;
+      --stride-darker: #2b0a19;
+      --stride-light-bg: #fef1f7;
+      --light-text: #ffffff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: var(--stride-darker);
+      color: var(--light-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+    .tagline {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--stride-dark);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      width: fit-content;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    label {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    input[type="number"],
+    input[type="text"] {
+      width: 9rem;
+      max-width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      transition: all 0.2s;
+    }
+    input[type="text"] { width: 14rem; }
+    input:focus {
+      outline: none;
+      border-color: var(--stride-pink);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .btn {
+      cursor: pointer;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--stride-pink);
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--stride-pink-dark);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .canvas-container {
+      position: relative;
+      margin: 1rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      background: #000;
+      image-rendering: pixelated;
+      max-width: 100%;
+      height: auto;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+    .heart { color: var(--stride-pink); }
+    .loading {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      z-index: 10;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .loading.active {
+      opacity: 1; pointer-events: all;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--stride-pink);
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .handle {
+      position: absolute;
+      width: 18px; height: 18px;
+      background: white;
+      border-radius: 4px;
+      border: 2px solid var(--stride-pink);
+      cursor: se-resize;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 2.2rem; }
+      .card { padding: 1.5rem 1rem; }
+      #controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .control-group { justify-content: space-between; }
+    }
+    /* —— OR divider —— */
+    .or-sep {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin: 1rem 0;
+    }
+    .or-sep::before,
+    .or-sep::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .or-sep span {
+      margin: 0 0.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 600;
+    }
+    /* tip below the images */
+    .tip {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Bad Kids Bucket Hatifier</h1>
-            <p class="tagline">Add some Stride style to your Bad Kids NFT</p>
-        </div>
-        
-        <div class="card">
-            <div id="controls">
-                <div class="control-group">
-                    <label for="kid-number">Bad Kid #</label>
-                    <input type="number" id="kid-number" min="1" value="1">
-                </div>
-                <button id="load-btn" class="btn btn-primary">Load & Hat</button>
-                <button id="random-btn" class="btn btn-secondary">Random</button>
-            </div>
-            
-            <div class="canvas-container">
-                <canvas id="kid-canvas" width="700" height="700"></canvas>
-                <div class="loading">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button id="download-btn" class="btn btn-primary" disabled>Download</button>
-            </div>
-        </div>
-        
-        <footer>
-            Made with <span class="heart">❤️</span> by the Stride community
-        </footer>
+  <div class="container">
+    <div class="header">
+      <h1>Bad Kids Bucket Hatifier</h1>
+      <p class="tagline">
+        Add some Stride style to your Bad Kids NFT — or any image you like!
+      </p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-to-bmp@1.1.0/dist/canvas-to-bmp.min.js"></script>
-    <script>
-        const CID = "QmbGvE3wmxex8KiBbbvMjR8f9adR28s3XkiZSTuGmHoMHV";
-        const gateways = ["https://cloudflare-ipfs.com/ipfs", "https://ipfs.io/ipfs"];
-        const hatUrl = "https://i.imgur.com/CzCmmnX.png";
-        
-        const hatImg = new Image();
-        hatImg.crossOrigin = "anonymous";
-        hatImg.src = hatUrl;
-        
-        const canvas = document.getElementById("kid-canvas");
-        const ctx = canvas.getContext("2d");
-        const numInput = document.getElementById("kid-number");
-        const loadBtn = document.getElementById("load-btn");
-        const randomBtn = document.getElementById("random-btn");
-        const downloadBtn = document.getElementById("download-btn");
-        const loadingEl = document.querySelector(".loading");
-        
-        // Handle random button click
-        randomBtn.addEventListener("click", () => {
-            const r = Math.floor(Math.random() * 9999) + 1;
-            numInput.value = r;
-            loadBadKid(r);
-        });
-        
-        // Handle load button click
-        loadBtn.addEventListener("click", () => {
-            const n = parseInt(numInput.value, 10);
-            if (!n || n < 1) {
-                alert("Please enter a valid Bad Kid number");
-                return;
-            }
-            loadBadKid(n);
-        });
-        
-        function loadBadKid(n) {
-            showLoading(true);
-            downloadBtn.disabled = true;
-            
-            const kid = new Image();
-            kid.crossOrigin = "anonymous";
-            
-            let gw = 0;
-            
-            const tryNext = () => {
-                if (gw >= gateways.length) {
-                    alert("Image loading failed. Please try another Bad Kid number or try again later.");
-                    showLoading(false);
-                    return;
-                }
-                kid.src = `${gateways[gw]}/${CID}/${n}.jpg`;
-            };
-            
-            kid.onload = () => {
-                draw(kid);
-                downloadBtn.disabled = false;
-                showLoading(false);
-            };
-            
-            kid.onerror = () => {
-                gw++;
-                tryNext();
-            };
-            
-            tryNext();
+    <div class="card">
+      <div id="controls">
+        <div class="control-group">
+          <label for="kid-number">Bad Kid #</label>
+          <input type="number" id="kid-number" min="1" value="1" />
+        </div>
+        <button id="load-btn" class="btn btn-primary">Load & Hat</button>
+        <button id="random-btn" class="btn btn-secondary">Random</button>
+
+        <div class="or-sep"><span>OR</span></div>
+
+        <div class="control-group">
+          <label for="custom-url">Custom URL</label>
+          <input
+            type="text"
+            id="custom-url"
+            placeholder="https://example.com/image.png"
+          />
+        </div>
+        <button id="custom-btn" class="btn btn-secondary">Load URL</button>
+      </div>
+
+      <div class="canvas-container" style="touch-action: none;">
+        <canvas id="kid-canvas" width="700" height="700"></canvas>
+        <div class="loading"><div class="spinner"></div></div>
+        <div id="resize-handle" class="handle" style="display: none;"></div>
+      </div>
+
+      <p class="tip">Tip: You can drag &amp; drop the hat to reposition it.</p>
+
+      <div class="action-buttons">
+        <button id="download-btn" class="btn btn-primary" disabled>
+          Download
+        </button>
+      </div>
+    </div>
+
+    <footer>
+      Made with <span class="heart">❤️</span> by the Stride community
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-to-bmp@1.1.0/dist/canvas-to-bmp.min.js"></script>
+  <script>
+    (() => {
+      const CID = "QmbGvE3wmxex8KiBbbvMjR8f9adR28s3XkiZSTuGmHoMHV";
+      const gateways = [
+        "https://cloudflare-ipfs.com/ipfs",
+        "https://ipfs.io/ipfs"
+      ];
+      const hatImg = new Image();
+      hatImg.crossOrigin = "anonymous";
+      hatImg.src = "https://i.imgur.com/CzCmmnX.png";
+
+      const canvas = document.getElementById("kid-canvas");
+      const ctx = canvas.getContext("2d");
+      const numInput = document.getElementById("kid-number");
+      const loadBtn = document.getElementById("load-btn");
+      const randomBtn = document.getElementById("random-btn");
+      const downloadBtn = document.getElementById("download-btn");
+      const loadingEl = document.querySelector(".loading");
+      const urlInput = document.getElementById("custom-url");
+      const urlBtn = document.getElementById("custom-btn");
+      const handleEl = document.getElementById("resize-handle");
+
+      let kidImg = null;
+      const aspect = 0.42;
+      const hat = { x: 0, y: -110, w: 475, h: 475 * aspect };
+      let isDragging = false,
+        isResizing = false,
+        dragOffsetX = 0,
+        dragOffsetY = 0;
+
+      function toCanvasXY(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY
+        };
+      }
+
+      function showLoading(show) {
+        loadingEl.classList.toggle("active", !!show);
+      }
+
+      function drawScene() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (kidImg)
+          ctx.drawImage(kidImg, 0, 0, canvas.width, canvas.height);
+        if (hatImg.complete)
+          ctx.drawImage(
+            hatImg,
+            hat.x,
+            hat.y,
+            hat.w,
+            hat.h
+          );
+        handleEl.style.display = "block";
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = rect.width / canvas.width,
+          scaleY = rect.height / canvas.height;
+        handleEl.style.left = `${
+          rect.left + (hat.x + hat.w - 9) * scaleX
+        }px`;
+        handleEl.style.top = `${
+          rect.top + (hat.y + hat.h - 9) * scaleY
+        }px`;
+      }
+
+      function loadBadKid(n) {
+        showLoading(true);
+        downloadBtn.disabled = true;
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        let gw = 0;
+        img.onload = () => {
+          kidImg = img;
+          resetHat();
+          drawScene();
+          downloadBtn.disabled = false;
+          showLoading(false);
+        };
+        img.onerror = () => {
+          gw++;
+          if (gw < gateways.length)
+            img.src = `${gateways[gw]}/${CID}/${n}.jpg`;
+          else {
+            alert("Image loading failed.");
+            showLoading(false);
+          }
+        };
+        img.src = `${gateways[0]}/${CID}/${n}.jpg`;
+      }
+
+      function loadCustom(url) {
+        if (!url) return alert("Enter a valid URL");
+        showLoading(true);
+        downloadBtn.disabled = true;
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          kidImg = img;
+          resetHat();
+          drawScene();
+          downloadBtn.disabled = false;
+          showLoading(false);
+        };
+        img.onerror = () => {
+          alert("Could not load image.");
+          showLoading(false);
+        };
+        img.src = url;
+      }
+
+      function resetHat() {
+        hat.w = 475;
+        hat.h = hat.w * (hatImg.naturalHeight
+          ? hatImg.naturalHeight / hatImg.naturalWidth
+          : aspect);
+        hat.x = (canvas.width - hat.w) / 2;
+        hat.y = -110;
+      }
+
+      function onPointerDown(e) {
+        const { x, y } = toCanvasXY(e);
+        // resize area?
+        if (
+          x >= hat.x + hat.w - 24 &&
+          x <= hat.x + hat.w &&
+          y >= hat.y + hat.h - 24 &&
+          y <= hat.y + hat.h
+        ) {
+          isResizing = true;
+          e.target.setPointerCapture(e.pointerId);
+          return;
         }
-        
-        function draw(kid) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw the Bad Kid NFT
-            ctx.drawImage(kid, 0, 0, canvas.width, canvas.height);
-            
-            // Draw the bucket hat
-            const hatW = 475;
-            const aspect = hatImg.naturalHeight / hatImg.naturalWidth || 0.42;
-            const hatH = hatW * aspect;
-            const x = (canvas.width - hatW) / 2;
-            const y = -110; // sweet-spot
-            
-            if (hatImg.complete) {
-                ctx.drawImage(hatImg, x, y, hatW, hatH);
-            } else {
-                hatImg.onload = () => ctx.drawImage(hatImg, x, y, hatW, hatH);
-            }
+        // drag area?
+        if (
+          x >= hat.x &&
+          x <= hat.x + hat.w &&
+          y >= hat.y &&
+          y <= hat.y + hat.h
+        ) {
+          isDragging = true;
+          dragOffsetX = x - hat.x;
+          dragOffsetY = y - hat.y;
+          e.target.setPointerCapture(e.pointerId);
         }
-        
-        // Handle download button click
-        downloadBtn.addEventListener("click", () => {
-            if (window.canvasToBMP) {
-                const bmpArray = canvasToBMP(canvas);
-                saveBlob(new Blob([bmpArray], {type: "image/bmp"}), "bmp");
-            } else {
-                canvas.toBlob(blob => saveBlob(blob, "png"), "image/png");
-            }
-        });
-        
-        function saveBlob(blob, ext) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `badkid-${numInput.value || "custom"}-bucket-hat.${ext}`;
-            a.click();
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+      function onPointerMove(e) {
+        if (!isDragging && !isResizing) return;
+        const { x, y } = toCanvasXY(e);
+        if (isDragging) {
+          hat.x = x - dragOffsetX;
+          hat.y = y - dragOffsetY;
+        } else {
+          hat.w = Math.max(50, x - hat.x);
+          hat.h = hat.w * (hatImg.naturalHeight
+            ? hatImg.naturalHeight / hatImg.naturalWidth
+            : aspect);
         }
-        
-        function showLoading(show) {
-            if (show) {
-                loadingEl.classList.add("active");
-            } else {
-                loadingEl.classList.remove("active");
-            }
+        drawScene();
+      }
+      function stopDrag() {
+        isDragging = false;
+        isResizing = false;
+      }
+
+      canvas.addEventListener("pointerdown", onPointerDown);
+      canvas.addEventListener("pointermove", onPointerMove);
+      canvas.addEventListener("pointerup", stopDrag);
+      canvas.addEventListener("pointerleave", stopDrag);
+
+      randomBtn.addEventListener("click", () => {
+        const r = Math.floor(Math.random() * 9999) + 1;
+        numInput.value = r;
+        loadBadKid(r);
+      });
+      loadBtn.addEventListener("click", () => {
+        const n = parseInt(numInput.value, 10);
+        if (!n || n < 1) return alert("Enter valid number");
+        loadBadKid(n);
+      });
+      urlBtn.addEventListener("click", () =>
+        loadCustom(urlInput.value.trim())
+      );
+      urlInput.addEventListener("keydown", (e) =>
+        e.key === "Enter" ? urlBtn.click() : null
+      );
+      numInput.addEventListener("keydown", (e) =>
+        e.key === "Enter" ? loadBtn.click() : null
+      );
+
+      function saveBlob(blob, ext) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `badkid-${numInput.value ||
+          "custom"}-bucket-hat.${ext}`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+      downloadBtn.addEventListener("click", () => {
+        if (window.canvasToBMP) {
+          const bmpArray = canvasToBMP(canvas);
+          saveBlob(new Blob([bmpArray], { type: "image/bmp" }), "bmp");
+        } else {
+          canvas.toBlob(
+            (blob) => saveBlob(blob, "png"),
+            "image/png"
+          );
         }
-        
-        // Add number input functionality for better UX
-        numInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                loadBtn.click();
-            }
-        });
-        
-        // Make the canvas responsive
-        function resizeCanvas() {
-            const container = document.querySelector(".canvas-container");
-            if (window.innerWidth < 800) {
-                const scale = Math.min(1, (window.innerWidth - 40) / canvas.width);
-                canvas.style.width = (canvas.width * scale) + "px";
-                canvas.style.height = (canvas.height * scale) + "px";
-            } else {
-                canvas.style.width = "";
-                canvas.style.height = "";
-            }
+      });
+
+      function resizeCanvas() {
+        if (window.innerWidth < 800) {
+          const scale = Math.min(
+            1,
+            (window.innerWidth - 40) / canvas.width
+          );
+          canvas.style.width = `${canvas.width * scale}px`;
+          canvas.style.height = `${canvas.height * scale}px`;
+        } else {
+          canvas.style.width = "";
+          canvas.style.height = "";
         }
-        
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
-        
-        // Initial preview
-        loadBadKid(1);
-    </script>
+        drawScene();
+      }
+      window.addEventListener("resize", resizeCanvas);
+
+      // when hat is loaded, draw a placeholder
+      hatImg.onload = () => {
+        resetHat();
+        drawScene();
+      };
+
+      // —— Initial page load: pick a random Bad Kid 1–9999 —— 
+      const initialKid = Math.floor(Math.random() * 9999) + 1;
+      numInput.value = initialKid;
+      loadBadKid(initialKid);
+      resizeCanvas();
+    })();
+  </script>
 </body>
 </html>
